@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/providers/theme-provider';
+import { ModalProvider } from '@/providers/modal-provider';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -13,7 +16,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`antialiased`}>{children}</body>
+			<body className={`antialiased`}>
+				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+					<ModalProvider />
+					<Toaster />
+					<main className="flex-1">{children}</main>
+				</ThemeProvider>
+			</body>
 		</html>
 	);
 }
