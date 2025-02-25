@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/providers/theme-provider';
 import { ModalProvider } from '@/providers/modal-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -15,14 +16,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={`antialiased`}>
-				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					<ModalProvider />
-					<Toaster />
-					<main className="flex-1">{children}</main>
-				</ThemeProvider>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body className={`antialiased`}>
+					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+						<ModalProvider />
+						<Toaster />
+						<main className="flex-1">{children}</main>
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }
