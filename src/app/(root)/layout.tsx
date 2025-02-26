@@ -1,4 +1,4 @@
-// import { db } from '@/lib/db';
+import { getStores } from '@/actions/get-stores';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
@@ -7,21 +7,17 @@ export default async function SetupLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const { userId } = await auth();
+	const { userId, redirectToSignIn } = await auth();
 
 	if (!userId) {
-		redirect('/sign-in');
+		redirectToSignIn();
 	}
 
-	// const store = await db.store.findFirst({
-	// 	where: {
-	// 		userId,
-	// 	},
-	// });
+	const stores = await getStores();
 
-	// if (store) {
-	// 	redirect(`/${store.id}`);
-	// }
+	if (stores.length !== 0) {
+		redirect(`/${stores[0].id}`);
+	}
 
 	return <>{children}</>;
 }

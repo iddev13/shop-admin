@@ -1,11 +1,11 @@
 'use client';
 
 import { FC, useState } from 'react';
-// import { useParams, useRouter } from 'next/navigation';
-// import { Store } from '@prisma/client';
+import { useParams, useRouter } from 'next/navigation';
+import { insertStoresSchema } from '@/db/schema';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import {
-	// Check,
+	Check,
 	ChevronsUpDown,
 	PlusCircle,
 	Store as StoreIcon,
@@ -26,37 +26,40 @@ import {
 	CommandList,
 	CommandSeparator,
 } from '@/components/ui/command';
+import { z } from 'zod';
 
 type PopoverTriggerProps = React.ComponentPropsWithRef<typeof PopoverTrigger>;
 
+type Stores = z.infer<typeof insertStoresSchema>;
+
 interface StoreSwitcherProps extends PopoverTriggerProps {
-	// items: Store[];
+	items: Stores[];
 	className?: string;
 }
 
 export const StoreSwitcher: FC<StoreSwitcherProps> = ({
 	className,
-	// items = [],
+	items = [],
 }) => {
 	const storeModal = useStoreModal();
-	// const params = useParams();
-	// const router = useRouter();
+	const params = useParams();
+	const router = useRouter();
 
 	const [open, setOpen] = useState<boolean>(false);
 
-	// const formattedItems = items.map((item) => ({
-	// 	label: item.name,
-	// 	value: item.id,
-	// }));
+	const formattedItems = items.map((item) => ({
+		label: item.name,
+		value: item.id,
+	}));
 
-	// const currentStore = formattedItems.find(
-	// 	(item) => item.value === params.storeId
-	// );
+	const currentStore = formattedItems.find(
+		(item) => item.value === params.storeId
+	);
 
-	// const onStoreSelect = (store: { value: string; label: string }) => {
-	// 	setOpen(false);
-	// 	router.push(`/${store.value}`);
-	// };
+	const onStoreSelect = (store: { value: string; label: string }) => {
+		setOpen(false);
+		router.push(`/${store.value}`);
+	};
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -70,7 +73,7 @@ export const StoreSwitcher: FC<StoreSwitcherProps> = ({
 					className={cn('w-[200px] justify-between', className)}
 				>
 					<StoreIcon className="mr-2 h-4 w-4" />
-					{/* {currentStore?.label} */}
+					{currentStore?.label}
 					<ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -80,7 +83,7 @@ export const StoreSwitcher: FC<StoreSwitcherProps> = ({
 						<CommandInput placeholder="Search store..." />
 						<CommandEmpty>No store found</CommandEmpty>
 						<CommandGroup heading="Stores">
-							{/* {formattedItems.map((store) => {
+							{formattedItems.map((store) => {
 								return (
 									<CommandItem
 										key={store.value}
@@ -99,7 +102,7 @@ export const StoreSwitcher: FC<StoreSwitcherProps> = ({
 										/>
 									</CommandItem>
 								);
-							})} */}
+							})}
 						</CommandGroup>
 					</CommandList>
 					<CommandSeparator />
